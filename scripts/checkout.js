@@ -1,4 +1,4 @@
-import { cart, saveCarttoStorage } from '../scripts/cart.js';
+import { cart, saveCarttoStorage, updateCartQuantity } from '../scripts/cart.js';
 import { products } from '../data/products.js';
 
 
@@ -49,6 +49,12 @@ function renderCart(){
   } else {
     console.error('Element with class .js-order-summary not found.');
   }
+  
+  const returnToHomeLink = document.querySelector('.return-to-home-link');
+  
+  if (returnToHomeLink) {
+    returnToHomeLink.textContent = `${cart.length} items`;
+  }
   bindDeleteItems();
 }
 
@@ -73,3 +79,4 @@ delete_cartItem.forEach((cartItem) => {
 window.addEventListener('DOMContentLoaded',()=>{
     renderCart();
 })
+

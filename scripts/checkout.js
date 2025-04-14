@@ -1,10 +1,10 @@
-import { cart } from '../scripts/cart.js';
+import { cart, saveCarttoStorage } from '../scripts/cart.js';
 import { products } from '../data/products.js';
 
-window.addEventListener('DOMContentLoaded', () => {
 
-  console.log("Checkout Page Fully Loaded");
-console.log(cart.length);
+function renderCart(){
+    console.log("Checkout Page Fully Loaded");
+    console.log(cart.length);
   let cartHTML = '';
 
   cart.forEach((cartItem) => {
@@ -21,7 +21,7 @@ console.log(cart.length);
               <div class="product-quantity">
                 <span>Quantity: <span class="quantity-label">${cartItem.quantity}</span></span>
                 <span class="update-quantity-link link-primary">Update</span>
-                <span class="delete-quantity-link link-primary">Delete</span>
+                <span class="delete-quantity-link link-primary" data-product-id=${product.id} >Delete</span>
               </div>
             </div>
             <div class="delivery-options">
@@ -43,11 +43,33 @@ console.log(cart.length);
         </div>`;
     }
   });
-
   const orderSummary = document.querySelector('.js-order-summary');
   if (orderSummary) {
     orderSummary.innerHTML = cartHTML || '<div>No orders yet</div>';
   } else {
     console.error('Element with class .js-order-summary not found.');
   }
+  bindDeleteItems();
+}
+
+
+function bindDeleteItems(){
+let delete_cartItem = document.querySelectorAll('.delete-quantity-link');
+delete_cartItem.forEach((cartItem) => {
+    cartItem.addEventListener('click', () => {
+        let id_delete = cartItem.dataset.productId;
+        const index=cart.findIndex(c=>c.productId === id_delete);
+        if(index!=-1)
+        {
+            cart.splice(index,1);
+        }
+        saveCarttoStorage();
+        renderCart();
+
+    });
 });
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+    renderCart();
+})

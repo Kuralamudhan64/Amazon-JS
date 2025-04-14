@@ -1,7 +1,7 @@
 import { products } from "../data/products.js";
 
 
-export const cart=JSON.parse(localStorage.getItem('cart')) || [];
+export let cart=JSON.parse(localStorage.getItem('cart')) || [];
 
 export function saveCarttoStorage(){
     localStorage.setItem('cart',JSON.stringify(cart));

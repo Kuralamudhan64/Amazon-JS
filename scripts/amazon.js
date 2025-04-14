@@ -25,7 +25,7 @@ products.forEach((product)=>{
           </div>
 
           <div class="product-quantity-container">
-            <select>
+            <select class="product-quantity-${product.id}">
               <option selected value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -46,10 +46,49 @@ products.forEach((product)=>{
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${product.id}">
             Add to Cart
           </button>
         </div>`
 })
 
+function updateQuantity(tempid){
+    cart.forEach((cartItem)=>{
+        if(cartItem.productId===tempid)
+        {
+            let quantity=document.querySelector(`.product-quantity-${tempid}`).value;
+            cartItem.quantity+=Number(quantity);
+        }
+        else{
+            
+        }
+    })
+}
+
 document.querySelector('.js-products-grid').innerHTML=productsHTML;
+let addToCartButtons=document.querySelectorAll(`.js-add-to-cart`);
+
+addToCartButtons.forEach((addToCart)=>{
+    addToCart.addEventListener('click',()=>{
+        let matchingItem;
+
+        cart.forEach((cartItem)=>{
+            if(cartItem.productId===addToCart.dataset.productId)
+            {matchingItem=cartItem;}
+        })
+        if(matchingItem)
+        {
+            updateQuantity(addToCart.dataset.productId);
+        }
+        else{
+        cart.push({
+            productId:addToCart.dataset.productId,
+            quantity:1
+        });
+    }
+        console.log(cart);
+    })
+
+})
+
+

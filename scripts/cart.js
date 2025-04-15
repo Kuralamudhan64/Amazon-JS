@@ -31,4 +31,14 @@ export function updateCartQuantity(){
 
 }
 
+export function replaceQuantity(productId ,quantity){
+    cart.forEach((cartItem)=>{
+        if(cartItem.productId===productId)
+        {
+            cartItem.quantity=quantity;
+            saveCarttoStorage();
+        }
+    })
+}
+
 console.log("partially Loaded");

@@ -1,17 +1,16 @@
 import { cart, saveCarttoStorage, updateCartQuantity } from '../scripts/cart.js';
 import { products } from '../data/products.js';
-
+import { replaceQuantity } from '../scripts/cart.js';
 
 function renderCart(){
-    console.log("Checkout Page Fully Loaded");
-    console.log(cart.length);
+    
   let cartHTML = '';
 
   cart.forEach((cartItem) => {
     const product = products.find(p => p.id === cartItem.productId);
     if (product) {
       cartHTML += `
-        <div class="cart-item-container">
+        <div class="cart-item-container js-cart-item-container-${product.id}">
           <div class="delivery-date">Delivery date: Tuesday, June 21</div>
           <div class="cart-item-details-grid">
             <img class="product-image" src="${product.image}">
@@ -19,8 +18,10 @@ function renderCart(){
               <div class="product-name">${product.name}</div>
               <div class="product-price">$${(product.priceCents / 100).toFixed(2)}</div>
               <div class="product-quantity">
-                <span>Quantity: <span class="quantity-label">${cartItem.quantity}</span></span>
-                <span class="update-quantity-link link-primary">Update</span>
+                <span>Quantity: <span class="quantity-label js-quantity-label-${product.id}">${cartItem.quantity}</span></span>
+                <span class="update-quantity-link link-primary" data-product-id=${product.id}>Update</span>
+                <input class="quantity-input js-quantity-input-${product.id}">
+                <span class="save-quantity-link link-primary js-save-quantity-link-${product.id}">Save</span>
                 <span class="delete-quantity-link link-primary" data-product-id=${product.id} >Delete</span>
               </div>
             </div>
@@ -55,9 +56,27 @@ function renderCart(){
   if (returnToHomeLink) {
     returnToHomeLink.textContent = `${cart.length} items`;
   }
+  bindUpdateItems();
   bindDeleteItems();
 }
 
+
+function bindUpdateItems(){
+  let UpdateButtons=document.querySelectorAll('.update-quantity-link');
+  UpdateButtons.forEach((button)=>{
+    button.addEventListener('click',()=>{
+      const container=document.querySelector(`.js-cart-item-container-${button.dataset.productId}`);
+      container.classList.add('is-editing-quantity');
+      let saveButton=document.querySelector(`.js-save-quantity-link-${button.dataset.productId}`);
+      saveButton.addEventListener('click',()=>{
+        let quantity=Number(document.querySelector(`.js-quantity-input-${button.dataset.productId}`).value);
+        replaceQuantity(button.dataset.productId ,quantity);
+        document.querySelector(`.js-quantity-label-${button.dataset.productId}`).textContent=quantity;        
+        container.classList.remove('is-editing-quantity');
+      })
+    })
+  })
+}
 
 function bindDeleteItems(){
 let delete_cartItem = document.querySelectorAll('.delete-quantity-link');

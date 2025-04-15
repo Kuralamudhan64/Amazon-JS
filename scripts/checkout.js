@@ -68,12 +68,22 @@ function bindUpdateItems(){
       const container=document.querySelector(`.js-cart-item-container-${button.dataset.productId}`);
       container.classList.add('is-editing-quantity');
       let saveButton=document.querySelector(`.js-save-quantity-link-${button.dataset.productId}`);
-      saveButton.addEventListener('click',()=>{
+      let inputField=document.querySelector(`.js-quantity-input-${button.dataset.productId}`);
+      
+      function saveQuantity(){
         let quantity=Number(document.querySelector(`.js-quantity-input-${button.dataset.productId}`).value);
         replaceQuantity(button.dataset.productId ,quantity);
         document.querySelector(`.js-quantity-label-${button.dataset.productId}`).textContent=quantity;        
         container.classList.remove('is-editing-quantity');
+      }
+      saveButton.addEventListener('click',saveQuantity);
+
+      inputField.addEventListener('keydown',(event)=>{
+        if(event.key === 'Enter')
+          saveQuantity();
       })
+
+
     })
   })
 }

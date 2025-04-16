@@ -1,6 +1,7 @@
 import { cart, saveCarttoStorage, updateCartQuantity } from '../scripts/cart.js';
 import { products } from '../data/products.js';
 import { replaceQuantity } from '../scripts/cart.js';
+import {getPrice} from '../scripts/ordersummary.js';
 
 function renderCart(){
     
@@ -10,7 +11,7 @@ function renderCart(){
     const product = products.find(p => p.id === cartItem.productId);
     if (product) {
       cartHTML += `
-        <div class="cart-item-container js-cart-item-container-${product.id}">
+        <div class="cart-item-container js-cart-item-container-${product.id}" data-product-id=${product.id}>
           <div class="delivery-date js-delivery-date-${product.id}">Delivery date: <span class="delivery-span">Tuesday, June 21<span></div>
           <div class="cart-item-details-grid">
             <img class="product-image" src="${product.image}">
@@ -58,7 +59,8 @@ function renderCart(){
   }
   bindUpdateItems();
   bindDeleteItems();
-  updateDeliveryDate()
+  updateDeliveryDate();
+  updateOrderSummary();
 }
 
 function updateDeliveryDate() {
@@ -127,6 +129,17 @@ delete_cartItem.forEach((cartItem) => {
 });
 }
 
+
+function updateOrderSummary(){
+  let cartItemContainerAll=document.querySelectorAll('.cart-item-container');
+  let totalamount=0;
+  cartItemContainerAll.forEach((cartItem)=>{
+
+    let itemId=cartItem.dataset.productId;
+    totalamount+=getPrice(itemId);
+  })
+  document.querySelector('.item-amount').textContent=`$${totalamount}`;
+}
 
 
 window.addEventListener('DOMContentLoaded',()=>{

@@ -1,6 +1,7 @@
 import {products} from '../data/products.js';
 import {cart, updateQuantity, updateCartQuantity} from '../scripts/cart.js';
 
+
 let productsHTML='';
 products.forEach((product)=>{
     productsHTML+= `<div class="product-container">
@@ -77,7 +78,6 @@ addToCartButtons.forEach((addToCart)=>{
         cart.push({
             productId:addToCart.dataset.productId,
             quantity:Number(document.querySelector(`.product-quantity-${addToCart.dataset.productId}`).value)
-
         });
         }
         updateCartQuantity();
